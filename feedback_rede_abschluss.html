@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback: Rede-Abschluss</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f5f5 0%, #ffffff 100%);
+            color: #333;
+            padding: 40px 20px;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #6B3C2E 0%, #8B4C3C 100%);
+            color: white;
+            padding: 40px 50px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        
+        .header p {
+            font-size: 15px;
+            opacity: 0.95;
+        }
+        
+        .content {
+            padding: 50px;
+        }
+        
+        .instruction {
+            background: #fafafa;
+            border-left: 5px solid #6B3C2E;
+            padding: 20px;
+            margin-bottom: 35px;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #555;
+        }
+        
+        .criterion {
+            margin-bottom: 35px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .criterion:last-of-type {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .criterion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 30px;
+            margin-bottom: 15px;
+        }
+        
+        .criterion-info {
+            flex: 1;
+        }
+        
+        .criterion-number {
+            display: inline-block;
+            background: #6B3C2E;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 32px;
+            font-weight: 700;
+            margin-right: 12px;
+            font-size: 14px;
+        }
+        
+        .criterion-title {
+            display: inline;
+            font-weight: 700;
+            color: #6B3C2E;
+            font-size: 16px;
+        }
+        
+        .criterion-description {
+            margin-top: 8px;
+            margin-left: 44px;
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+        }
+        
+        .stars {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .star {
+            font-size: 28px;
+            cursor: pointer;
+            color: #ddd;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+        
+        .star:hover {
+            color: #FFC107;
+            transform: scale(1.15);
+        }
+        
+        .star.active {
+            color: #6B3C2E;
+        }
+        
+        .rating-label {
+            font-size: 13px;
+            color: #999;
+            margin-top: 8px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .feedback-field {
+            width: 100%;
+            min-height: 90px;
+            padding: 12px;
+            margin-top: 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 14px;
+            color: #333;
+            resize: vertical;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .feedback-field:focus {
+            outline: none;
+            border-color: #6B3C2E;
+            box-shadow: 0 0 0 3px rgba(107, 60, 46, 0.1);
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-start;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-reset {
+            background: #f0f0f0;
+            color: #333;
+        }
+        
+        .btn-reset:hover {
+            background: #e0e0e0;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-submit {
+            background: #6B3C2E;
+            color: white;
+        }
+        
+        .btn-submit:hover {
+            background: #5a3221;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(107, 60, 46, 0.3);
+        }
+        
+        .btn-print {
+            background: #666;
+            color: white;
+        }
+        
+        .btn-print:hover {
+            background: #555;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .summary {
+            display: none;
+            background: linear-gradient(135deg, #f0f0f0 0%, #fafafa 100%);
+            border: 2px solid #6B3C2E;
+            border-radius: 8px;
+            padding: 30px;
+            margin-top: 40px;
+            text-align: center;
+        }
+        
+        .summary.active {
+            display: block;
+            animation: slideIn 0.4s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .summary > div:first-child {
+            font-size: 16px;
+            font-weight: 700;
+            color: #6B3C2E;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+        }
+        
+        .summary-score {
+            font-size: 48px;
+            font-weight: 700;
+            color: #6B3C2E;
+            margin-bottom: 15px;
+        }
+        
+        .summary-text {
+            font-size: 16px;
+            color: #555;
+            font-weight: 600;
+        }
+        
+        .footer {
+            background: linear-gradient(135deg, #6B3C2E 0%, #8B4C3C 100%);
+            padding: 30px 50px;
+            font-size: 13px;
+            color: white;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            .header {
+                padding: 30px 30px;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .content {
+                padding: 30px;
+            }
+            
+            .criterion-header {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .stars {
+                gap: 6px;
+            }
+            
+            .star {
+                font-size: 24px;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            button {
+                width: 100%;
+            }
+            
+            .footer {
+                padding: 20px 30px;
+                font-size: 12px;
+            }
+        }
+        
+        @media print {
+            body {
+                padding: 0;
+                background: white;
+            }
+            
+            .container {
+                box-shadow: none;
+                max-width: 100%;
+                border-radius: 0;
+            }
+            
+            .button-group {
+                display: none;
+            }
+            
+            .criterion {
+                break-inside: avoid;
+                page-break-inside: avoid;
+            }
+            
+            .feedback-field {
+                border: 1px solid #333;
+                background: #fff;
+                min-height: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Feedback: Rede-Abschluss</h1>
+            <p>EBK Neuss | Deutsch Lk | Peer-Feedback</p>
+        </div>
+        
+        <div class="content">
+            <div class="instruction">
+                <strong>Anleitung:</strong> Bewerten Sie den Rede-Abschluss Ihrer Mitschülerin oder Ihres Mitschülers anhand der fünf Kriterien. Klicken Sie auf die Sterne (1–5), um eine Bewertung zu vergeben. Schreiben Sie konkrete Rückmeldung in die Textfelder. Seien Sie ehrlich und konstruktiv!
+            </div>
+            
+            <form id="feedback-form">
+                <!-- KRITERIUM 1 -->
+                <div class="criterion">
+                    <div class="criterion-header">
+                        <div class="criterion-info">
+                            <div>
+                                <span class="criterion-number">1</span>
+                                <span class="criterion-title">Handlungsperspektive</span>
+                            </div>
+                            <div class="criterion-description">
+                                Öffnet der Abschluss eine Tür zu einer Handlung oder Vision? Fordert er die Zuhörer implizit auf, etwas zu tun?
+                            </div>
+                        </div>
+                        <div class="stars" data-criterion="1">
+                            <span class="star" data-value="1">★</span>
+                            <span class="star" data-value="2">★</span>
+                            <span class="star" data-value="3">★</span>
+                            <span class="star" data-value="4">★</span>
+                            <span class="star" data-value="5">★</span>
+                        </div>
+                    </div>
+                    <div class="rating-label" data-label="1"></div>
+                    <textarea class="feedback-field" placeholder="Was genau funktioniert (oder funktioniert nicht)? Welche Form des Appells könnte stärker sein?"></textarea>
+                </div>
+                
+                <!-- KRITERIUM 2 -->
+                <div class="criterion">
+                    <div class="criterion-header">
+                        <div class="criterion-info">
+                            <div>
+                                <span class="criterion-number">2</span>
+                                <span class="criterion-title">Appellstruktur</span>
+                            </div>
+                            <div class="criterion-description">
+                                Wirkt der Appell respektvoll und implizit – oder moralisierend und bevormundend?
+                            </div>
+                        </div>
+                        <div class="stars" data-criterion="2">
+                            <span class="star" data-value="1">★</span>
+                            <span class="star" data-value="2">★</span>
+                            <span class="star" data-value="3">★</span>
+                            <span class="star" data-value="4">★</span>
+                            <span class="star" data-value="5">★</span>
+                        </div>
+                    </div>
+                    <div class="rating-label" data-label="2"></div>
+                    <textarea class="feedback-field" placeholder="Wie wird die Zielgruppe angesprochen? Wirkt das elegant oder aufdringlich?"></textarea>
+                </div>
+                
+                <!-- KRITERIUM 3 -->
+                <div class="criterion">
+                    <div class="criterion-header">
+                        <div class="criterion-info">
+                            <div>
+                                <span class="criterion-number">3</span>
+                                <span class="criterion-title">Kohärenz zur Leitthese</span>
+                            </div>
+                            <div class="criterion-description">
+                                Folgt der Abschluss logisch aus der Leitthese der Rede – oder wirkt er abgehängt?
+                            </div>
+                        </div>
+                        <div class="stars" data-criterion="3">
+                            <span class="star" data-value="1">★</span>
+                            <span class="star" data-value="2">★</span>
+                            <span class="star" data-value="3">★</span>
+                            <span class="star" data-value="4">★</span>
+                            <span class="star" data-value="5">★</span>
+                        </div>
+                    </div>
+                    <div class="rating-label" data-label="3"></div>
+                    <textarea class="feedback-field" placeholder="Passt der Appell zu dem, was vorher gesagt wurde? Gibt es Brüche oder Widersprüche?"></textarea>
+                </div>
+                
+                <!-- KRITERIUM 4 -->
+                <div class="criterion">
+                    <div class="criterion-header">
+                        <div class="criterion-info">
+                            <div>
+                                <span class="criterion-number">4</span>
+                                <span class="criterion-title">Hoffnung/Dringlichkeit</span>
+                            </div>
+                            <div class="criterion-description">
+                                Vermittelt der Abschluss Hoffnung oder Handlungsbedarf? Wirkt er emotional authentisch?
+                            </div>
+                        </div>
+                        <div class="stars" data-criterion="4">
+                            <span class="star" data-value="1">★</span>
+                            <span class="star" data-value="2">★</span>
+                            <span class="star" data-value="3">★</span>
+                            <span class="star" data-value="4">★</span>
+                            <span class="star" data-value="5">★</span>
+                        </div>
+                    </div>
+                    <div class="rating-label" data-label="4"></div>
+                    <textarea class="feedback-field" placeholder="Welche Stimmung entsteht? Wirkt das echt oder aufgesetzt? Ist die emotionale Kraft spürbar?"></textarea>
+                </div>
+                
+                <!-- KRITERIUM 5 -->
+                <div class="criterion">
+                    <div class="criterion-header">
+                        <div class="criterion-info">
+                            <div>
+                                <span class="criterion-number">5</span>
+                                <span class="criterion-title">Sprachliche Prägnanz</span>
+                            </div>
+                            <div class="criterion-description">
+                                Bleibt der Abschluss im Gedächtnis – oder ist er austauschbar?
+                            </div>
+                        </div>
+                        <div class="stars" data-criterion="5">
+                            <span class="star" data-value="1">★</span>
+                            <span class="star" data-value="2">★</span>
+                            <span class="star" data-value="3">★</span>
+                            <span class="star" data-value="4">★</span>
+                            <span class="star" data-value="5">★</span>
+                        </div>
+                    </div>
+                    <div class="rating-label" data-label="5"></div>
+                    <textarea class="feedback-field" placeholder="Welche Worte oder Sätze sind prägnant? Wo wirkt die Sprache schwach oder generisch?"></textarea>
+                </div>
+                
+                <div class="button-group">
+                    <button type="reset" class="btn-reset">Zurücksetzen</button>
+                    <button type="button" class="btn-submit" onclick="submitFeedback()">Feedback speichern</button>
+                    <button type="button" class="btn-print" onclick="window.print()">Drucken</button>
+                </div>
+            </form>
+            
+            <div class="summary" id="summary">
+                <div>Gesamtbewertung</div>
+                <div class="summary-score" id="final-score"></div>
+                <div class="summary-text" id="summary-text"></div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            EBK Neuss | Deutsch Lk | Peer-Feedback Rede-Abschluss
+        </div>
+    </div>
+    
+    <script>
+        const ratings = {};
+        const labels = {
+            1: "Sehr schwach",
+            2: "Schwach",
+            3: "Befriedigend",
+            4: "Gut",
+            5: "Ausgezeichnet"
+        };
+        
+        // Event-Listener für alle Sterne
+        document.querySelectorAll('.star').forEach(star => {
+            star.addEventListener('click', function(e) {
+                e.preventDefault();
+                const starGroup = this.closest('.stars');
+                const criterion = starGroup.dataset.criterion;
+                const value = parseInt(this.dataset.value);
+                
+                // Speichern der Bewertung
+                ratings[criterion] = value;
+                
+                // Alle Sterne in dieser Gruppe aktualisieren
+                starGroup.querySelectorAll('.star').forEach((s) => {
+                    const sValue = parseInt(s.dataset.value);
+                    if (sValue <= value) {
+                        s.classList.add('active');
+                    } else {
+                        s.classList.remove('active');
+                    }
+                });
+                
+                // Label aktualisieren
+                document.querySelector(`.rating-label[data-label="${criterion}"]`).textContent = labels[value];
+            });
+        });
+        
+        function submitFeedback() {
+            const ratings_array = Object.values(ratings);
+            
+            if (ratings_array.length === 0) {
+                alert('Bitte vergeben Sie mindestens eine Bewertung!');
+                return;
+            }
+            
+            const average = (ratings_array.reduce((a, b) => a + b, 0) / ratings_array.length).toFixed(1);
+            const summary = document.getElementById('summary');
+            document.getElementById('final-score').textContent = average + ' / 5.0';
+            
+            let interpretation = '';
+            if (average >= 4.5) {
+                interpretation = 'Ausgezeichneter Rede-Abschluss – stark und überzeugend!';
+            } else if (average >= 3.5) {
+                interpretation = 'Guter Rede-Abschluss mit Stärken und Entwicklungspotenzial';
+            } else if (average >= 2.5) {
+                interpretation = 'Befriedigender Rede-Abschluss – Überarbeitungspotenzial erkennbar';
+            } else {
+                interpretation = 'Schwacher Rede-Abschluss – wesentliche Überarbeitungen erforderlich';
+            }
+            
+            document.getElementById('summary-text').textContent = interpretation;
+            summary.classList.add('active');
+            summary.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        document.getElementById('feedback-form').addEventListener('reset', function() {
+            document.querySelectorAll('.star').forEach(star => {
+                star.classList.remove('active');
+            });
+            document.querySelectorAll('.rating-label').forEach(label => {
+                label.textContent = '';
+            });
+            document.querySelectorAll('.feedback-field').forEach(field => {
+                field.value = '';
+            });
+            document.getElementById('summary').classList.remove('active');
+            Object.keys(ratings).forEach(key => delete ratings[key]);
+        });
+    </script>
+</body>
+</html>
